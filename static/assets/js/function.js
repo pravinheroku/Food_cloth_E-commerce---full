@@ -56,10 +56,17 @@ $("#commentForm").submit(function (e) {
 })
 
 $(document).ready(function () {
-    $(".filter-checkbox").on("click", function () {
+    $(".filter-checkbox, #price-filter-btn").on("click", function () {
         console.log("A Checkbox have been clicked ");
 
         let filter_object = {}
+
+        let min_price = $("#max_price").attr("min")
+        let max_price = $("#max_price").val()
+
+        filter_object.min_price = min_price;
+        filter_object.max_price = max_price;
+
 
         $(".filter-checkbox").each(function () {
             let filter_value = $(this).val()
@@ -87,4 +94,35 @@ $(document).ready(function () {
             }
         })
     })
+
+    $("#max_price").on("blur", function () {
+        let min_price = $(this).attr("min")
+        let max_price = $(this).attr("max")
+        let current_price = $(this).val()
+
+        // console.log("Current price is:", current_price);
+        // console.log("Max price is:", max_price);
+        // console.log("Min price is:", min_price);
+
+        if (current_price < parseInt(min_price) || current_price > parseInt(max_price)) {
+            // console.log("Error occured");
+
+            min_price = Math.round(min_price * 100) / 100
+            max_price = Math.round(max_price * 100) / 100
+
+
+            // console.log("Max price is:", max_price);
+            // console.log("Min price is:", min_price);
+
+            alert("Price must between ₹" + min_price + 'and ₹' + max_price)
+            $(this).val(min_price)
+            $("#range").val(min_price)
+
+            $(this).focus()
+
+            return false
+
+        }
+    })
+
 })
