@@ -193,6 +193,9 @@ def add_to_cart(request):
         "title": request.GET["title"],
         "qty": request.GET["qty"],
         "price": request.GET["price"],
+        "image": request.GET["image"],
+        "pid": request.GET["pid"],
+        "price": request.GET["price"],
     }
 
     if "cart_data_obj" in request.session:
