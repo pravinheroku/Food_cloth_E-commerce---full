@@ -8,7 +8,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 STATUS_CHOICES = (
-    ("process", "Processing"),
+    ("processing", "Processing"),
     ("shipped", "Shipped"),
     ("delivered", "Delivered"),
 )
@@ -207,6 +207,9 @@ class CartOrderItems(models.Model):
     class Meta:
         verbose_name_plural = "Cart Order Items"
 
+    def category_image(self):
+        return mark_safe('<img src="%s" width="50" height="50" />' % (self.image.url))
+
     def order_img(self):
         return mark_safe(
             '<img src="/media/%s" width="50" height="50" />' % (self.image)
@@ -256,6 +259,7 @@ class wishlist(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=100, null=True)
+    mobile = models.CharField(max_length=30, null=True)
     status = models.BooleanField(default=False)
 
     class Meta:

@@ -25,7 +25,6 @@ urlpatterns = [
     path("", include("core.urls")),
     path("user/", include("userauths.urls")),
     path("ckeditor/", include("ckeditor_uploader.urls")),
-    # path('tinymce/', include('tinymce.urls')), 
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

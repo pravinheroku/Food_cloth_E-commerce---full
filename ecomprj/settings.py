@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Third party apps
     "taggit",
     "ckeditor",
+    # Paypal integration
+    "paypal.standard.ipn",
     # Custom app
     "core",
     "userauths",
@@ -146,6 +148,8 @@ JAZZMIN_SETTINGS = {
     "copyright": "pravin.ecom ©",
 }
 
+LOGIN_URL = "userauths:sign-in"
+
 AUTH_USER_MODEL = "userauths.User"
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -158,3 +162,6 @@ CKEDITOR_CONFIGS = {
         "extraPlugins": ",".join(["codesnippet", "widget", "dialog"]),
     }
 }
+
+PAYPAL_RECEIVER_EMAIL = "pravinkart.business@gmail.com"
+PAYPAL_TEST = True
