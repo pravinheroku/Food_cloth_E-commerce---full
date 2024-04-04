@@ -7,7 +7,7 @@ from core.models import (
     CartOrderItems,
     ProductImages,
     ProductReview,
-    wishlist,
+    Wishlist,
     Address,
 )
 
@@ -99,6 +99,6 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Vendor, VendorAdmin)
 admin.site.register(CartOrder, CartOrderAdmin)
 admin.site.register(CartOrderItems, CartOrderItemsAdmin)
-admin.site.register(wishlist, wishlistAdmin)
+admin.site.register(Wishlist, wishlistAdmin)
 admin.site.register(ProductReview, ProductReviewAdmin)
 admin.site.register(Address, AddressAdmin)

@@ -115,7 +115,12 @@
                               <input type="hidden" class="product-image-{{p.id}}" value="{{p.image.url}}" name="" id="">
                               <input type="hidden" class="product-id-{{p.id}}" value="{{p.id}}">
                               <input type="hidden" class="product-title-{{p.id}}" value="{{p.title}}">
-                              <button class="add add-to-cart-btn" data-index="{{p.id}}" id="add-to-cart-btn" style="border:none; " ><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
+
+                              <div class="d-flex"> 
+                                <button class="add add-to-cart-btn" data-index="{{p.id}}" id="add-to-cart-btn" style="border:none; " ><i class="fi-rs-shopping-cart mr-5"></i>Add</button>
+                                <button class="add-to-wishlist" data-product-item="{{p.id}}" style="border:none; background:none; "> <i class="fi-rs-heart" style="fill: aqua;"></i> </button>
+                              </div>
+
                             </div>
                           </div>
                         </div>

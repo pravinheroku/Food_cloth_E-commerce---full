@@ -47,5 +47,13 @@ urlpatterns = [
     # Order detail
     path("dashboard/order/<int:id>/", views.order_detail, name="order-detail"),
     # Address Defaul maker
-    path("make-default-address/", views.make_default_address, name="make-default-address"),
+    path(
+        "make-default-address/", views.make_default_address, name="make-default-address"
+    ),
+    # Wishlist url
+    path("wishlist/", views.wishlist_view, name="wishlist"),
+    # Adding to wishlist
+    path("add-to-wishlist/", views.add_to_wishlist, name="add-to-wishlist"),
+    # Deleting product from wihslist
+    path("remove-from-wishlist/", views.remove_wishlist, name="remove-from-wishlist"),
 ]

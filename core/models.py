@@ -242,7 +242,7 @@ class ProductReview(models.Model):
         return self.rating
 
 
-class wishlist(models.Model):
+class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(

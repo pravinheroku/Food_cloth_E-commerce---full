@@ -10,13 +10,14 @@ from core.models import (
     CartOrderItems,
     ProductImages,
     ProductReview,
-    wishlist,
+    Wishlist,
     Address,
 )
 from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 
+from django.core import serializers
 from django.contrib.auth.decorators import login_required
 
 from django.urls import reverse
@@ -229,11 +230,41 @@ def add_to_cart(request):
     )
 
 
+# def cart_view(request):
+#     cart_total_amount = 0
+#     if "cart_data_obj" in request.session:
+#         for p_id, item in request.session["cart_data_obj"].items():
+#             cart_total_amount += int(item["qty"]) * float(item["price"])
+#         return render(
+#             request,
+#             "core/cart.html",
+#             {
+#                 "cart_data": request.session[
+#                     "cart_data_obj"
+#                 ],  # Corrected variable name
+#                 "totalcartitems": len(request.session["cart_data_obj"]),
+#                 "cart_total_amount": cart_total_amount,
+#             },
+#         )
+#     else:
+#         messages.warning(request, "Your cart is empty")
+#         return redirect("core:index")
+
+
 def cart_view(request):
     cart_total_amount = 0
+    currency_symbol = "₹"  # Define the currency symbol used in your application
     if "cart_data_obj" in request.session:
         for p_id, item in request.session["cart_data_obj"].items():
-            cart_total_amount += int(item["qty"]) * float(item["price"])
+            # Extract numeric part of the price string and remove currency symbol
+            price = item["price"].replace(currency_symbol, "").strip()
+            # Convert cleaned price string to float
+            try:
+                cart_total_amount += int(item["qty"]) * float(price)
+            except ValueError:
+                # Handle cases where the price string cannot be converted to float
+                # You may want to log or handle this error appropriately
+                pass
         return render(
             request,
             "core/cart.html",
@@ -435,3 +466,45 @@ def make_default_address(request):
     Address.objects.update(status=False)
     Address.objects.filter(id=id).update(status=True)
     return JsonResponse({"boolean": True})
+
+
+@login_required
+def wishlist_view(request):
+
+    wishlist = Wishlist.objects.all()
+
+    context = {"w": wishlist}
+
+    return render(request, "core/wishlist.html", context)
+
+
+def add_to_wishlist(request):
+    product_id = request.GET["id"]
+    product = Product.objects.get(id=product_id)
+
+    context = {}
+
+    wishlist_count = Wishlist.objects.filter(product=product, user=request.user).count()
+    print(wishlist_count)
+
+    if wishlist_count > 0:
+        context = {"bool": True}
+    else:
+        new_wishlist = Wishlist.objects.create(product=product, user=request.user)
+
+        context = {"bool": True}
+
+    return JsonResponse(context)
+
+
+def remove_wishlist(request):
+    pid = request.GET["id"]
+    wishlist = Wishlist.objects.filter(user=request.user)
+
+    product = Wishlist.objects.filter(id=pid)
+    product.delete()
+
+    context = {"bool": True, "wishlist": wishlist}
+    wishlist_json = serializers.serialize("json", wishlist)
+    data = render_to_string("core/async/wishlist-list.html", context)
+    return JsonResponse({"data": data, "w": wishlist_json})
