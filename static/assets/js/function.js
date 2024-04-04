@@ -299,32 +299,36 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on("submit", "#contact-form-ajax", function (e) {
+        e.preventDefault()
+        console.log("submited..");
+
+        let full_name = $("#full_name").val()
+        let email = $("#email").val()
+        let phone = $("#phone").val()
+        let subject = $("#subject").val()
+        let message = $("#message").val()
+
+        console.log("Name:", full_name);
+        console.log("Email:", email);
+        console.log("Phone:", phone);
+        console.log("Subject:", subject);
+        console.log("Message:", message);
+
+        $.ajax({
+            url: "/ajax-contact-form",
+            data: { "full_name": full_name, "email": email, "phone": phone, "subject": subject, "message": message },
+            dataType: "json",
+            beforeSend: function () {
+                console.log("Sending data to server..");
+            },
+            success: function (response) {
+                console.log("Send data to server!");
+                $("#contact-form-ajax").hide()
+                $(".contact_us_p").hide()
+                $("#message-response").html("Message sent successfully!")
+            }
+        })
+    })
 
 })
-
-
-// $(document).on("click", ".delete-wishlist-product", function () {
-//     let wishlist_id = $(this).attr("data-wishlist-product");
-//     let this_row = $(this).closest("tr"); // Get the closest parent row of the clicked button
-
-//     console.log("Wishlist id is:", wishlist_id);
-
-//     $.ajax({
-//         url: "/remove-from-wishlist",
-//         data: {
-//             "id": wishlist_id
-//         },
-//         dataType: "json",
-//         beforeSend: function () {
-//             console.log("Deleting the product from wishlist...");
-//         },
-//         success: function (response) {
-//             // Remove the row from the DOM
-//             this_row.remove();
-//             // Check if the wishlist is empty
-//             if ($("#wishlist-list tbody").children().length == 0) {
-//                 $("#wishlist-list tbody").append('<tr><td colspan="7"><p>Nothing in wishlist...</p></td></tr>');
-//             }
-//         }
-//     });
-// });

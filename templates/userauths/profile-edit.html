@@ -1,0 +1,68 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+  <main class="main pages">
+    <div class="page-header breadcrumb-wrap">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+          <span></span> Pages <span></span> My Account
+        </div>
+      </div>
+    </div>
+    <div class="page-content pt-150 pb-150">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 m-auto">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="dashboard-menu">
+                  <ul class="nav flex-column" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="fi-rs-user mr-10"></i>Profile</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="page-login.html"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="tab-content account dashboard-content pl-50">
+                  <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="card">
+                      <div class="card-header border-bottom">
+                        <h3 class="mb-0">Update Profile</h3>
+                      </div>
+                      
+                      {% if form.errors %}
+                      <div class="alert-danger alert ">
+                        <strong>{{form.errors}}</strong>
+                      </div>              
+                      {% endif %}      
+                      {% if profile.image %}
+                        <span><img src="{{ profile.image.url }}" style="width: 150px; object-fit: cover; border-radius:50%;  height: 150px; " alt="" /></span>
+                      {% else %}
+                        <span><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAmAMBIgACEQEDEQH/xAAbAAEAAwEBAQEAAAAAAAAAAAAABQYHBAIBA//EADsQAAEDAgIGBgcGBwAAAAAAAAABAgMEEQUGISIxQVGhEhNhcYGRFiRysbLR4RQjJTNT8BU0QkNSYpP/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAWEQEBAQAAAAAAAAAAAAAAAAAAARH/2gAMAwEAAhEDEQA/ANSABpkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAreZ8wOonLR0Sp9otrv/T7E7fcBNVuI0VAnrdQyNdzb3cvgmkjPSzCelbrJrcepWxQ5Huke58jlc9y3Vzluq+J5Ka1GixGir09UqGSLvbezk8F0nUZMx7o3tfG5Wvat0c1bKniXXLOYXVqpR1zk+0W1H/qdi9oFkABAAAAAAAAAAAAAAAABx4vWph+HTVW1WtsztcuhOZmT3uke573dJ7lVzl4qv7Uuee5FbQ00SLodLdfBPqUopQAFQPUb3Rva9i2e1Uc1eCpsXzseQSrGn4RW/xDDoarYrm6/Y5NC8zsKzkSRXUNTFfQ2XpJ2XT6FmIAAAAAAAAAAAAAAAAKxntl6Olem6RU5fQpZo+ZqN1bg07GNvIy0jETfbbyuZwUoACoAAlWLpkRlqOqfxkRPJPqWci8s0bqLBoGPbaR95Hou6+xPKxKEAAAAAAAAAAAAAAAAApGZMvPppX1dFGr6dyq57G7Y17uHuLuL22AZJdNoNMq8Gw6rd0p6SNXrte3VVfKxx+imFdK/VS93WqUZ/2lky3l6SolZV1sasp2qjmMdtkXu4e8tFJguHUjulBSx9NNj3azk87nfe+0gAAAAAAAAAAAAAAAAAEXjeNU+Ex2d95UOTUiRea8EAkZZY4Y3STPaxjdrnLZCArs3UUCq2mjkqHJvTVb57VKjiOI1WJTdZVSdJEXVYmhre5DkKasM2b8Qf8AkxwRJ7KuXmc/pTi179fH/wAmkMBiLDDm/EGreaOCVPZVq8iYoc3UU6o2pjfTuX+pdZvntQowGDWIpY5o2yQva9jtjmrdD2Zfh2I1WGzdZSydFFXWYulru9C+YJjVPisdm/d1DU14lXmnFCKlAAAAAAAAAAAAPiqiIqqtkTSq8AI7HcVjwqjWRbOmdoiYu9ePchnVRPLUzvmner5Hrdzl3nZjuIrieIvmT8purEi/4p8yPAAAqAAKAAAH6U88tNOyaB6skYt2uTcfmCK0nAsVjxWjSRLNmbolYm5ePcpJGaYFiK4ZiLJv7TtSVP8AVfkaUioqIqLdF0ovEg+gAAAAAAAEPmqrWkwaXoKqPmVIm+O3kikwVHPsv8lDu13r36E+YFSABUAAUAAAAAAAADQ8q1a1eDRdNVV8SrG7w2clQzwtuQpV9dh9h6c0+RFW4AEAAAAAAKVntfxCmTckS/EfABWgAaQAAAAAAAAAAAs2RF/EKlNyxJ8R8BKLsACNAACP/9k=" style="width: 150px; object-fit: cover; border-radius:50%;  height: 150px; " alt="" /></span>
+                      {% endif %}
+                      <div>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div class="mb-3">{{ form.full_name }}</div>
+                          <div class="mb-3">{{ form.bio }}</div>
+                          <div class="mb-3">{{ form.phone }}</div>
+                          <div class="mb-3">{{ form.image }}</div>
+                          <button type="submit" class="btn btn-success">Save changes &nbsp;<span><i class="fas fa-edit"></i></span></button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock %}

@@ -56,4 +56,8 @@ urlpatterns = [
     path("add-to-wishlist/", views.add_to_wishlist, name="add-to-wishlist"),
     # Deleting product from wihslist
     path("remove-from-wishlist/", views.remove_wishlist, name="remove-from-wishlist"),
+    # contact-page
+    path("contact/", views.contact, name="contact"),
+    # contact-form ajax
+    path("ajax-contact-form/", views.ajax_contact, name="ajax-contact-form"),
 ]

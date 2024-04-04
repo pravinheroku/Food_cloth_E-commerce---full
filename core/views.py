@@ -13,6 +13,7 @@ from core.models import (
     Wishlist,
     Address,
 )
+from userauths.models import ContactUs, Profile
 from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -462,9 +463,12 @@ def customer_dashboard(request):
         messages.success(request, "Address added successfully!")
         return redirect("core:dashboard")
 
+    user_profile = Profile.objects.get(user=request.user)
+
     context = {
         "orders_list": orders_list,
         "address": address,
+        "user_profile": user_profile,
         "month": month,
         "total_orders": total_orders,
         "orders": orders,
@@ -528,3 +532,46 @@ def remove_wishlist(request):
     wishlist_json = serializers.serialize("json", wishlist)
     data = render_to_string("core/async/wishlist-list.html", context)
     return JsonResponse({"data": data, "w": wishlist_json})
+
+
+def contact(request):
+    return render(request, "core/contact.html")
+
+
+def ajax_contact(request):
+    full_name = request.GET["full_name"]
+    email = request.GET["email"]
+    phone = request.GET["phone"]
+    subject = request.GET["subject"]
+    message = request.GET["message"]
+
+    contact = ContactUs.objects.create(
+        full_name=full_name,
+        email=email,
+        phone=phone,
+        subject=subject,
+        message=message,
+    )
+
+    data = {"bool": True, "message": "Message sent successfully!"}
+
+    return JsonResponse({"data": data})
+
+
+def about_us(request):
+    return render(request, "core/about_us.html")
+
+
+def purchase_guide(request):
+    return render(request, "core/purchase_guide.html")
+
+
+def privacy_policy(request):
+    return render(request, "core/privacy_policy.html")
+
+
+def term_of_service(request):
+    return render(request, "core/terms_of_privacy.html")
+
+
+

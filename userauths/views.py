@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from userauths.forms import UserRegisterForm
+from userauths.forms import UserRegisterForm, ProfileForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.conf import settings
-from userauths.models import User
+from userauths.models import User, Profile
 
 # User = settings.AUTH_USER_MODEL
 
@@ -67,3 +67,20 @@ def logout_view(request):
     logout(request)
     messages.success(request, f"You have logged out!")
     return redirect("userauths:sign-in")
+
+
+def profile_update(request):
+    profile = Profile.objects.get(user=request.user)
+    form = ProfileForm(instance=profile)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.user = request.user
+            new_form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect("core:dashboard")
+
+    context = {"form": form, "profile": profile}
+    return render(request, "userauths/profile-edit.html", context)
