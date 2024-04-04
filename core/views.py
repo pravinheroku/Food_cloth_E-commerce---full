@@ -17,6 +17,8 @@ from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
 
+import calendar
+from django.db.models.functions import ExtractMonth
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 
@@ -432,22 +434,40 @@ def payment_failed_view(request):
 
 @login_required
 def customer_dashboard(request):
-    orders = CartOrder.objects.filter(user=request.user).order_by("-id")
+    orders_list = CartOrder.objects.filter(user=request.user).order_by("-id")
     address = Address.objects.filter(user=request.user)
+
+    orders = (
+        CartOrder.objects.annotate(month=ExtractMonth("order_date"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .values("month", "count")
+    )
+    month = []
+    total_orders = []
+
+    for o in orders:
+        month.append(calendar.month_name[o["month"]])
+        total_orders.append(o["count"])
 
     if request.method == "POST":
         address = request.POST.get("address")
         mobile = request.POST.get("mobile")
 
         new_address = Address.objects.create(
-            address=address, mobile=mobile, user=request.user
+            address=address,
+            mobile=mobile,
+            user=request.user,
         )
         messages.success(request, "Address added successfully!")
         return redirect("core:dashboard")
 
     context = {
-        "orders": orders,
+        "orders_list": orders_list,
         "address": address,
+        "month": month,
+        "total_orders": total_orders,
+        "orders": orders,
     }
     return render(request, "core/dashboard.html", context)
 

@@ -180,7 +180,7 @@ class CartOrder(models.Model):
     )
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(
-        auto_now_add=True,
+        auto_now_add=False,
     )
     product_status = models.CharField(
         choices=STATUS_CHOICES, max_length=30, default="processing"
