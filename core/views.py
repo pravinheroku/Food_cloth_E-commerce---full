@@ -411,36 +411,36 @@ def update_cart(request):
 
 @login_required
 def checkout_view(request):
-
     cart_total_amount = 0
-    total_amount = 0
     order = None  # Initialize order outside the loop
 
-    # Checking if "cart_data_obj" session is still exists
+    # Checking if "cart_data_obj" session exists
     if "cart_data_obj" in request.session:
-        # Getting total amount for paypal
-        for p_id, item in request.session["cart_data_obj"].items():
-            total_amount += int(item["qty"]) * float(item["price"])
-
         # Create order object only if there are items in the cart
-        if total_amount > 0:
+        if request.session["cart_data_obj"]:
+            # Calculating total amount
+            for p_id, item in request.session["cart_data_obj"].items():
+                # Remove currency symbol and whitespace from the price string
+                price_str = item["price"].replace('₹', '').strip()
+                cart_total_amount += int(item["qty"]) * float(price_str)
+
             order = CartOrder.objects.create(
                 user=request.user,
-                price=total_amount,
+                price=cart_total_amount,
             )
 
-            # Getting total amount for the cart
+            # Creating order items
             for p_id, item in request.session["cart_data_obj"].items():
-                cart_total_amount += int(item["qty"]) * float(item["price"])
-
+                # Remove currency symbol and whitespace from the price string
+                price_str = item["price"].replace('₹', '').strip()
                 cart_order_products = CartOrderItems.objects.create(
                     order=order,
                     invoice_no="INVOICE_NO-" + str(order.id),
                     item=item["title"],
                     image=item["image"],
                     qty=item["qty"],
-                    price=item["price"],
-                    total=float(item["qty"]) * float(item["price"]),
+                    price=price_str,
+                    total=float(item["qty"]) * float(price_str),
                 )
 
     if order is None:
@@ -463,7 +463,7 @@ def checkout_view(request):
 
     try:
         active_address = Address.objects.get(user=request.user, status=True)
-    except:
+    except Address.DoesNotExist:
         messages.warning(
             request, "There are multiple addresses are selected, select only one!"
         )
@@ -473,14 +473,13 @@ def checkout_view(request):
         request,
         "core/checkout.html",
         {
-            "cart_data": request.session.get("cart_data_obj", {}),  # Corrected variable name
+            "cart_data": request.session.get("cart_data_obj", {}),
             "totalcartitems": len(request.session.get("cart_data_obj", {})),
             "cart_total_amount": cart_total_amount,
             "paypal_payment_button": paypal_payment_button,
             "active_address": active_address,
         },
     )
-
 
 
 @login_required
